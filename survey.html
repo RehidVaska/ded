@@ -897,57 +897,7 @@
 						}else{
 							jQuery('.lbl_email_pattern').show();
 						}
-					});
-					
-					jQuery('#cretivego8').click(function (){
-						if(jQuery('#first_name').val() == '' && jQuery('#last_name').val() == '' && jQuery('#phone').val() == '' && jQuery('#email').val() == ''){
-						jQuery('.lbl_first_name').show();
-						jQuery('.lbl_last_name').show();
-						jQuery('.lbl_phone').show();
-						jQuery('.lbl_email_address').show();
-						}else if(jQuery('#first_name').val() == ''){
-						jQuery('.lbl_first_name').show();
-						}else if($('#last_name').val() == ''){
-						jQuery('.lbl_last_name').show();
-						}else if($('#phone').val() == ''){
-						jQuery('.lbl_phone').show();
-						}else if($('#email').val() == ''){
-						jQuery('.lbl_email_address').show();
-						}else{
-						var phone = $('#phone').val();
-						var pattern = /^\+?1\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
-						var email = $('#email').val();
-						var pattern1 = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-						if(!phone.match(pattern)){
-							jQuery('.lbl_phone_pattern').show();
-						}else if(!email.match(pattern1)){
-							jQuery('.lbl_email_pattern').show();
-						}else {
-							jQuery('.lbl_phone_pattern').css('display','none');
-							jQuery('.lbl_email_pattern').css('display','none');
-						
-						var treatment_type = $('#treatment_type').val();
-						var insurance_type = $('#insurance_type').val();
-						var how_soon =  $('#how_soon').val();
-						var dental_anxiety =  $('#dental_anxiety').val();
-						var is_ready_to_book = $('#is_ready_to_book').val();
-						var first_name = jQuery('#first_name').val();
-						var last_name = jQuery('#last_name').val();
-						var phone = jQuery('#phone').val();
-						var email = jQuery('#email').val();
-						var tag_name = jQuery('#tag_name').val();
-						var tag_name1 = jQuery('#tag_name1').val();
-						if(tag_name1 != ''){
-						var tags = [ tag_name , tag_name1 ];
-						}else{
-						var tags = [tag_name ] ;
-						}
-						}
-						}
-					});
-
-						
+					});		
 		</script>
-			
 	</body>
 </html>
