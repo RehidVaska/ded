@@ -5,7 +5,7 @@ from telegram.ext import Application
 from telegram.ext import MessageHandler, CallbackQueryHandler
 from telegram.ext import filters
 
-TELEGRAM_TOKEN = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U'
+TELEGRAM_TOKEN = '5880113137:AAEBkVOchK-a2a4fQEFSwj04oP3bhpIHBEU'
 
 
 async def echo(update, context):
