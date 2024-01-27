@@ -9,8 +9,8 @@ app = Flask(__name__)
 CORS(app)
 
 app.secret_key = 'your_very_secret_key'
-TELEGRAM_TOKEN = '5880113137:AAEBkVOchK-a2a4fQEFSwj04oP3bhpIHBEU'
-TELEGRAM_CHAT_ID = '@ad524534'
+TELEGRAM_TOKEN = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U'
+TELEGRAM_CHAT_ID = '-4151741751'
 
 need_redirect = None
 form_tokens = {}
