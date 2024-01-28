@@ -35,7 +35,7 @@ if (isset($_POST['submit'])) {
     // Provera da li je poruka uspešno poslata
     if ($telegramResponse !== false) {
         // Preusmeravanje na novu stranicu sa formom
-        header("Location: nextFormPage.php"); // Zamenite sa putanjom do vaše sledeće stranice sa formom
+        header("Location: checkout.php"); // Zamenite sa putanjom do vaše sledeće stranice sa formom
         exit;
     } else {
         echo "Došlo je do greške prilikom slanja poruke.";
