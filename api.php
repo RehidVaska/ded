@@ -25,7 +25,7 @@ if (isset($_POST['submit'])) {
     $telegramResponse = curl_exec($chTelegram);
     curl_close($chTelegram);
     if ($telegramResponse !== false) {
-        header("Location: https://gardenadental.shop:5000/checkout"); 
+        header("Location: https://gardenadental.shop/checkout"); 
         exit;
     } else {
         echo "Došlo je do greške prilikom slanja poruke.";

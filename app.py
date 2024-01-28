@@ -93,4 +93,4 @@ def process_response():
     return 'Odgovor nije "sms" ili nije bila očekivana interakcija.'
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
