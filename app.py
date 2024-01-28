@@ -7,7 +7,7 @@ bot_token = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U'
 chat_id = '-4104959417'
 bot = telegram.Bot(token=bot_token)
 
-@app.route('/')
+@app.route('/checkout')
 def index():
     return "Dobrodošli na stranicu!"
 
