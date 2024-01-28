@@ -9,14 +9,9 @@ if (isset($update["callback_query"])) {
     $callbackData = $callbackQuery["data"];
     $callbackChatId = $callbackQuery["message"]["chat"]["id"];
     
-    // Pretpostavimo da callback data sadrži 'SMS_' praćeno uniqueId
     if (strpos($callbackData, 'SMS_') === 0) {
-        $uniqueId = substr($callbackData, 4); // Izdvaja uniqueId iz callback data
-
-        // Ažuriranje statusa u sistemu ili bazi podataka
+        $uniqueId = substr($callbackData, 4);
         updateStatus($uniqueId, 'SMS');
-
-        // Opcionalno: šaljite odgovor natrag u Telegram chat
         $responseMessage = "Primljen SMS za ID: " . $uniqueId;
         file_get_contents($apiUrl . "/sendMessage?chat_id=" . $callbackChatId . "&text=" . urlencode($responseMessage));
     }
