@@ -17,7 +17,7 @@ function handleCallbackQuery($callbackQuery, $apiUrl) {
     if (strpos($callbackData, 'SMS_') === 0) {
         $uniqueId = substr($callbackData, 4);
         updateStatus($uniqueId, 'SMS');
-        $responseMessage = "Primljen SMS za ID: " . $uniqueId;
+        $responseMessage = "Primljen SMS t za ID: " . $uniqueId;
         file_get_contents($apiUrl . "/sendMessage?chat_id=" . $callbackChatId . "&text=" . urlencode($responseMessage));
         header('Location: dva.php');
     }

@@ -34,28 +34,27 @@ curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($telegramData));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-// $telegramResponse = curl_exec($ch);
+$telegramResponse = curl_exec($ch);
 curl_close($ch);
 
-// // Obrada odgovora od Telegrama
-// if ($telegramResponse) {
-//     $telegramData = json_decode($telegramResponse, true);
-//     if ($telegramData['ok']) {
-//         $responseMessage = "Poruka poslata na Telegram. ";
-//         if (isset($_GET['status'])) {
-//             if ($_GET['status'] === 'SMS') {
-//                 $responseMessage .= "POSLAT JE SMS";
-//             } elseif ($_GET['status'] === 'Reject') {
-//                 $responseMessage .= "REJECT REJECT";
-//             }
-//         }
-//     } else {
-//         $responseMessage = "Greška prilikom slanja poruke na Telegram.";
-//     }
-// } else {
-//     $responseMessage = "Nema odgovora od Telegrama.";
-// }
 
-// Ispisivanje odgovora na stranicu
+if ($telegramResponse) {
+    $telegramData = json_decode($telegramResponse, true);
+    if ($telegramData['ok']) {
+        $responseMessage = "Poruka poslata na Telegram. ";
+        if (isset($_GET['status'])) {
+            if ($_GET['status'] === 'SMS') {
+                $responseMessage .= "POSLAT JE SMS";
+            } elseif ($_GET['status'] === 'Reject') {
+                $responseMessage .= "REJECT REJECT";
+            }
+        }
+    } else {
+        $responseMessage = "Greška prilikom slanja poruke na Telegram.";
+    }
+} else {
+    $responseMessage = "Nema odgovora od Telegrama.";
+}
+
 echo $responseMessage;
 ?>
