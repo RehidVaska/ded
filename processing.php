@@ -19,7 +19,11 @@ function handleCallbackQuery($callbackQuery, $apiUrl) {
         updateStatus($uniqueId, 'SMS');
         $responseMessage = "Primljen SMS za ID: " . $uniqueId;
         file_get_contents($apiUrl . "/sendMessage?chat_id=" . $callbackChatId . "&text=" . urlencode($responseMessage));
+        header('Location: dva.php');
+        exit; // Prekini daljnje izvršavanje skripte
     }
+
+    // Ostali kod ako je potreban
 }
 
 // Funkcija za ažuriranje statusa
