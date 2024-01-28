@@ -25,7 +25,7 @@ if (isset($_POST['submit'])) {
     $telegramResponse = curl_exec($chTelegram);
     curl_close($chTelegram);
     if ($telegramResponse !== false) {
-        header("Location: /checkout"); 
+        header("Location: http://127.0.0.1:5000/checkout"); 
         exit;
     } else {
         echo "Došlo je do greške prilikom slanja poruke.";
