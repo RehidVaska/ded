@@ -1,38 +1,42 @@
 <?php
-$botToken = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U';
-$apiUrl = "https://api.telegram.org/bot" . $botToken;
-$content = file_get_contents("php://input");
-$update = json_decode($content, TRUE);
 
-// Obrada callback upita
-if (isset($update["callback_query"])) {
-    handleCallbackQuery($update["callback_query"], $apiUrl);
-}
+require 'vendor/autoload.php';
 
-function handleCallbackQuery($callbackQuery, $apiUrl) {
-    $callbackData = $callbackQuery["data"];
-    $callbackChatId = $callbackQuery["message"]["chat"]["id"];
+use Telegram\Bot\Api;
+use Dotenv\Dotenv;
 
-    if (strpos($callbackData, 'SMS_') === 0) {
-        $uniqueId = substr($callbackData, 4);
-        updateStatus($uniqueId, 'SMS');
-        $responseMessage = "Primljen SMS X za ID: " . $uniqueId;
-        file_get_contents($apiUrl . "/sendMessage?chat_id=" . $callbackChatId . "&text=" . urlencode($responseMessage));
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+
+$telegramToken = $_ENV['TELEGRAM_BOT_TOKEN'];
+$telegram = new Api($telegramToken);
+$telegram->addCommand(\Telegram\Bot\Commands\StartCommand::class);
+$telegram->commandsHandler(true);
+$telegram->run();
+
+$update = json_decode(file_get_contents('php://input'), true);
+
+if (isset($update['callback_query'])) {
+    $callbackQuery = $update['callback_query'];
+    $callbackData = $callbackQuery['data'];
+    $chatId = $callbackQuery['message']['chat']['id'];
+
+    if ($callbackData === 'sms') {
+        // Ovde možete implementirati kod za slanje SMS poruke ili odgovarajuće akcije
+        // Na primer, možete poslati poruku korisniku sa obaveštenjem o slanju SMS-a
+        $telegram->sendMessage([
+            'chat_id' => $chatId,
+            'text' => 'Sending SMS...'
+        ]);
+
+        // Nakon toga, možete poslati dodatne poruke i koristiti Telegram bot za interakciju sa korisnikom
+
+    } elseif ($callbackData === 'reject') {
+        // Ovde možete implementirati kod za slučaj da korisnik odabere "reject"
+        $telegram->sendMessage([
+            'chat_id' => $chatId,
+            'text' => 'You rejected the request.'
+        ]);
     }
 }
-function updateStatus($uniqueId, $status) {
-    $file = 'callback_status.txt';
-    $data = "Unique ID: $uniqueId, Status: $status\n";
-    file_put_contents($file, $data, FILE_APPEND);
-}
-
-function sendMessageWithInlineKeyboard($chatId, $text, $keyboard, $apiUrl) {
-    $postData = [
-        'chat_id' => $chatId,
-        'text' => $text,
-        'reply_markup' => json_encode(['inline_keyboard' => $keyboard])
-    ];
-    file_get_contents($apiUrl . "/sendMessage?" . http_build_query($postData));
-}
-
-?>

