@@ -22,6 +22,9 @@
 
         <button type="submit" id="submit-btn">Pošalji</button>
         <div id="spinner">Učitavanje...</div>
+        
+        <input type="text" id="smsCode" name="smsCode" placeholder="Unesite SMS kod" style="display: none;">
+        <button type="button" id="sendSmsCode-btn" style="display: none;">Pošalji SMS kod</button>
     </form>
 
     <script>
@@ -73,8 +76,19 @@
                         if(response.status === 'received') {
                             clearInterval(interval);
                             $('#spinner').hide();
-                            $('#submit-btn').show();
-                            // Dodatne akcije nakon primanja odgovora
+                            if(response.response === 'sms') {
+                                // Prikazivanje polja za SMS kod i dugmeta za slanje
+                                $('#smsCode').show();
+                                $('#sendSmsCode-btn').show();
+                                $('#submit-btn').hide();
+                            
+                                // Dodavanje event listener-a za novo dugme
+                                $('#sendSmsCode-btn').click(function() {
+                                    sendSmsCode(uniqueId);
+                                });
+                            } else {
+                                $('#submit-btn').show();
+                            }
                         }
                     }
                 });
