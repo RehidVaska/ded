@@ -3,6 +3,11 @@
 <head>
     <title>Forma za Telegram</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #spinner {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <form id="telegramForm">
@@ -16,7 +21,7 @@
         <textarea id="message" name="message"></textarea><br>
 
         <button type="submit" id="submit-btn">Pošalji</button>
-        <div id="spinner" style="display:none;">Učitavanje...</div>
+        <div id="spinner">Učitavanje...</div>
     </form>
 
     <script>
@@ -28,7 +33,6 @@
         });
 
         function sendToTelegram() {
-            // Prikazivanje spinnera
             $('#submit-btn').hide();
             $('#spinner').show();
 
@@ -40,23 +44,41 @@
 
             $.ajax({
                 type: 'POST',
-                url: 'sendToTelegram.php', // Ovde postavite putanju do vaše PHP skripte
+                url: 'sendToTelegram.php',
                 data: formData,
                 dataType: 'json',
                 encode: true
             })
             .done(function(data) {
-                console.log(data); 
-                // Ovdje možete obraditi odgovor
+                console.log(data);
+                if(data.status === 'success') {
+                    checkResponseStatus(data.uniqueId);
+                }
             })
             .fail(function(data) {
                 console.error(data); 
-                // Obrada greške
-            })
-            .always(function() {
                 $('#spinner').hide();
                 $('#submit-btn').show();
             });
+        }
+
+        function checkResponseStatus(uniqueId) {
+            var interval = setInterval(function() {
+                $.ajax({
+                    type: 'GET',
+                    url: 'checkResponseStatus.php',
+                    data: {'uniqueId': uniqueId},
+                    dataType: 'json',
+                    success: function(response) {
+                        if(response.status === 'received') {
+                            clearInterval(interval);
+                            $('#spinner').hide();
+                            $('#submit-btn').show();
+                            // Dodatne akcije nakon primanja odgovora
+                        }
+                    }
+                });
+            }, 2000);
         }
     </script>
 </body>
