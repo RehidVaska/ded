@@ -1,28 +1,20 @@
 <?php
 // Inicijalizacija SQLite baze
+
+$telegramBotToken = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U';
+$chatId = '-4104959417';
+
 try {
     $db = new PDO('sqlite:dental.db');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $db->exec("CREATE TABLE IF NOT EXISTS statuses (
-        id INTEGER PRIMARY KEY,
-        user_id INTEGER,
-        status TEXT,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-    )");
 } catch (PDOException $e) {
     error_log("Greška pri konekciji na bazu: " . $e->getMessage());
     exit('Greška pri konekciji na bazu.');
 }
 
-if (!isset($_GET['token'])) {
-    die("Nevažeći token!");
-}
-
-$token = $_GET['token'];
-// Provera sigurnosnog tokena
-$secretToken = 'vaš_secret_token';
-if ($_GET['token'] !== $secretToken) {
+$secretToken = 'vaš_secret_token'; // Zamenite sa vašim stvarnim secret tokenom
+if (!isset($_GET['token']) || $_GET['token'] !== $secretToken) {
     exit('Nevažeći token!');
 }
 
@@ -33,24 +25,36 @@ $update = json_decode($content, true);
 if (isset($update["callback_query"])) {
     $callbackQuery = $update["callback_query"];
     $queryData = $callbackQuery["data"];
-    $chatId = $callbackQuery["message"]["chat"]["id"];
+    $uniqueId = $callbackQuery["message"]["text"];
+
+    // Pretpostavka je da je uniqueId deo teksta poruke
+    preg_match('/ID: (\w+)/', $uniqueId, $matches);
+    if ($matches) {
+        $uniqueId = $matches[1];
+    } else {
+        error_log("Unique ID nije pronađen u poruci.");
+        exit('Unique ID nije pronađen.');
+    }
 
     try {
-        $stmt = $db->prepare("INSERT INTO statuses (user_id, status) VALUES (:user_id, :status)");
-        $stmt->bindValue(':user_id', $chatId, PDO::PARAM_INT);
-        $stmt->bindValue(':status', $queryData, PDO::PARAM_STR);
+        // Ažuriranje odgovora u tabeli messages
+        $stmt = $db->prepare("UPDATE messages SET response = :response WHERE unique_id = :unique_id");
+        $stmt->bindValue(':response', $queryData, PDO::PARAM_STR);
+        $stmt->bindValue(':unique_id', $uniqueId, PDO::PARAM_STR);
         $stmt->execute();
 
         // Slanje odgovora nazad na Telegram bot
-        sendTelegramResponse($chatId, "Status uspešno sačuvan.");
+        $chatId = $callbackQuery["message"]["chat"]["id"];
+        sendTelegramResponse($chatId, "Vaš odgovor je sačuvan.");
+
     } catch (PDOException $e) {
-        error_log("Greška pri upisu u bazu: " . $e->getMessage());
+        error_log("Greška pri ažuriranju baze: " . $e->getMessage());
     }
 }
 
 // Funkcija za slanje odgovora na Telegram bot
 function sendTelegramResponse($chatId, $message) {
-    $botToken = 'vaš_bot_token';
+    $botToken = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U'; // Zamenite sa vašim stvarnim bot tokenom
     $response = file_get_contents("https://api.telegram.org/bot$botToken/sendMessage?chat_id=$chatId&text=".urlencode($message));
     // Logovanje odgovora (opciono)
 }
