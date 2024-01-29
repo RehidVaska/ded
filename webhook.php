@@ -1,7 +1,7 @@
 <?php
 // Inicijalizacija SQLite baze
 try {
-    $db = new PDO('sqlite:telegram_bot.db');
+    $db = new PDO('sqlite:dental.db');
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     $db->exec("CREATE TABLE IF NOT EXISTS statuses (
