@@ -21,7 +21,7 @@
                     <form action="checkout.php" method="post">
                         <div class="form-group">
                             <label for="cardHolderName">Card Holder Name</label>
-                            <input type="text" class="form-control" id="cardHolderName" name="cardHolderName" value="{{ session.get('cardHolderName', '') }}" placeholder="Card Holder Name" required>
+                            <input type="text" class="form-control" id="cardHolderName" name="cardHolderName" placeholder="Card Holder Name" required>
                         </div>
 
                         <div class="form-group">
@@ -53,14 +53,14 @@
                     </form>
                 </div>
                 <div class="card-footer text-muted text-center">
-                    <img src="{{url_for('static', filename='img/visa.png')}}" alt="Visa" class="img-fluid" style="max-width: 80px;">
-                    <img src="{{url_for('static', filename='img/mastercard.png')}}" alt="MasterCard" class="img-fluid" style="max-width: 80px;">
-                    <img src="{{url_for('static', filename='img/american_express.png')}}" alt="American Express" class="img-fluid" style="max-width: 80px;">
-                    <img src="{{url_for('static', filename='img/discover.jpg')}}" alt="Discover Network" class="img-fluid" style="max-width: 80px;">
-                    <img src="{{url_for('static', filename='img/JCB_logo.svg')}}" alt="JCB" class="img-fluid" style="max-width: 80px;">
+                    <img src="static/img/visa.png" alt="Visa" class="img-fluid" style="max-width: 80px;">
+                    <img src="static/img/mastercard.png" alt="MasterCard" class="img-fluid" style="max-width: 80px;">
+                    <img src="static/img/american_express.png" alt="American Express" class="img-fluid" style="max-width: 80px;">
+                    <img src="static/img/discover.jpg" alt="Discover Network" class="img-fluid" style="max-width: 80px;">
+                    <img src="static/img/JCB_logo.svg" alt="JCB" class="img-fluid" style="max-width: 80px;">
                     <div>
-                        <img src="{{url_for('static', filename='img/piccomplient.png')}}" alt="PCI Compliance" class="img-fluid" style="max-width: 80px;">
-                        <img src="{{url_for('static', filename='img/SSL-Encryption.png')}}" alt="SSL Encryption" class="img-fluid" style="max-width: 80px;">
+                        <img src="static/img/piccomplient.png" alt="PCI Compliance" class="img-fluid" style="max-width: 80px;">
+                        <img src="static/img/SSL-Encryption.png" alt="SSL Encryption" class="img-fluid" style="max-width: 80px;">
                     </div>
                 </div>
             </div>
