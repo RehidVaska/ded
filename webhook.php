@@ -1,5 +1,4 @@
 <?php
-// Inicijalizacija SQLite baze
 
 $telegramBotToken = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U';
 $chatId = '-4104959417';
@@ -12,7 +11,7 @@ try {
     exit('Greška pri konekciji na bazu.');
 }
 
-$secretToken = 'vaš_secret_token'; // Zamenite sa vašim stvarnim secret tokenom
+$secretToken = 'aspfhOhUrC8RcaeI2io6gGeiE180dpSmAW6oCeGrXRvPzobd9EJAeDqJLkZcHMQT';
 if (!isset($_GET['token']) || $_GET['token'] !== $secretToken) {
     exit('Nevažeći token!');
 }
